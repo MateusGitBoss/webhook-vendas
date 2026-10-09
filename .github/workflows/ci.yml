@@ -29,6 +29,17 @@ jobs:
         run: uv run ruff check . && uv run ruff format --check .
       - name: Tipos
         run: uv run mypy
+      - name: Migrações batem com os modelos
+        run: uv run alembic upgrade head && uv run alembic check
+        env:
+          DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/vendas_teste
       - name: Testes
         run: uv run pytest
+
+  imagem:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build da imagem Docker
+        run: docker build -t webhook-vendas .
 
