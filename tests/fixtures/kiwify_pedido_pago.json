@@ -1,0 +1,9 @@
+{
+  "order_id": "a1b2c3d4-0000-4000-8000-kiwify000001",
+  "order_status": "paid",
+  "webhook_event_type": "order_approved",
+  "payment_method": "pix",
+  "Product": {"product_id": "prod-77", "product_name": "Mentoria Afiliados Pro"},
+  "Customer": {"email": "joao@example.com", "full_name": "João Lima", "mobile": "+5598999990000"},
+  "Commissions": {"charge_amount": 49700, "currency": "BRL"}
+}

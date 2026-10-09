@@ -11,7 +11,7 @@ dependencies = [
     "fastapi>=0.143.0",
     "httpx>=0.28.1",
     "psycopg[binary]>=3.2",
-    "pydantic>=2.8",
+    "pydantic[email]>=2.8",
     "pydantic-settings>=2.15.0",
     "sqlalchemy>=2.0",
     "uvicorn[standard]>=0.54.0",
@@ -37,6 +37,7 @@ extend-exclude = ["migrations/versions"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "SIM", "N", "RUF"]
+ignore = ["N818"]  # nomes de exceção em português (ErroPayload)
 
 [tool.ruff.lint.flake8-bugbear]
 extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Header"]

@@ -1,0 +1,16 @@
+{
+  "id": "3c1b0f2e-8d3c-4c55-a0f4-1b2c3d4e5f60",
+  "creation_date": 1791516000000,
+  "event": "PURCHASE_APPROVED",
+  "version": "2.0.0",
+  "data": {
+    "product": {"id": 3528952, "name": "Curso Lives que Vendem"},
+    "buyer": {"email": "Ana.Souza@Example.com", "name": "Ana Souza", "document": "12345678900"},
+    "purchase": {
+      "transaction": "HP16015479281022",
+      "status": "APPROVED",
+      "price": {"value": 197.9, "currency_value": "BRL"},
+      "payment": {"type": "CREDIT_CARD", "installments_number": 3}
+    }
+  }
+}
