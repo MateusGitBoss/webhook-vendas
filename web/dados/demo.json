@@ -1,0 +1,312 @@
+{
+ "segredo_hash": "segredo-da-demonstracao",
+ "token_kiwify": "token-kiwify-demonstracao",
+ "exemplos": {
+  "hotmart": {
+   "id": "3c1b0f2e-8d3c-4c55-a0f4-1b2c3d4e5f60",
+   "creation_date": 1791516000000,
+   "event": "PURCHASE_APPROVED",
+   "version": "2.0.0",
+   "data": {
+    "product": {
+     "id": 3528952,
+     "name": "Curso Lives que Vendem"
+    },
+    "buyer": {
+     "email": "Ana.Souza@Example.com",
+     "name": "Ana Souza",
+     "document": "12345678900"
+    },
+    "purchase": {
+     "transaction": "HP16015479281022",
+     "status": "APPROVED",
+     "price": {
+      "value": 197.9,
+      "currency_value": "BRL"
+     },
+     "payment": {
+      "type": "CREDIT_CARD",
+      "installments_number": 3
+     }
+    }
+   }
+  },
+  "kiwify": {
+   "order_id": "a1b2c3d4-0000-4000-8000-kiwify000001",
+   "order_status": "paid",
+   "webhook_event_type": "order_approved",
+   "payment_method": "pix",
+   "Product": {
+    "product_id": "prod-77",
+    "product_name": "Mentoria Afiliados Pro"
+   },
+   "Customer": {
+    "email": "joao@example.com",
+    "full_name": "João Lima",
+    "mobile": "+5598999990000"
+   },
+   "Commissions": {
+    "charge_amount": 49700,
+    "currency": "BRL"
+   }
+  }
+ },
+ "conferencia": {
+  "pode_mudar": [
+   {
+    "atual": "pendente",
+    "novo": "pendente",
+    "resultado": false
+   },
+   {
+    "atual": "pendente",
+    "novo": "recusada",
+    "resultado": true
+   },
+   {
+    "atual": "pendente",
+    "novo": "aprovada",
+    "resultado": true
+   },
+   {
+    "atual": "pendente",
+    "novo": "reembolsada",
+    "resultado": true
+   },
+   {
+    "atual": "pendente",
+    "novo": "cancelada",
+    "resultado": true
+   },
+   {
+    "atual": "pendente",
+    "novo": "chargeback",
+    "resultado": true
+   },
+   {
+    "atual": "recusada",
+    "novo": "pendente",
+    "resultado": false
+   },
+   {
+    "atual": "recusada",
+    "novo": "recusada",
+    "resultado": false
+   },
+   {
+    "atual": "recusada",
+    "novo": "aprovada",
+    "resultado": true
+   },
+   {
+    "atual": "recusada",
+    "novo": "reembolsada",
+    "resultado": true
+   },
+   {
+    "atual": "recusada",
+    "novo": "cancelada",
+    "resultado": true
+   },
+   {
+    "atual": "recusada",
+    "novo": "chargeback",
+    "resultado": true
+   },
+   {
+    "atual": "aprovada",
+    "novo": "pendente",
+    "resultado": false
+   },
+   {
+    "atual": "aprovada",
+    "novo": "recusada",
+    "resultado": false
+   },
+   {
+    "atual": "aprovada",
+    "novo": "aprovada",
+    "resultado": false
+   },
+   {
+    "atual": "aprovada",
+    "novo": "reembolsada",
+    "resultado": true
+   },
+   {
+    "atual": "aprovada",
+    "novo": "cancelada",
+    "resultado": true
+   },
+   {
+    "atual": "aprovada",
+    "novo": "chargeback",
+    "resultado": true
+   },
+   {
+    "atual": "reembolsada",
+    "novo": "pendente",
+    "resultado": false
+   },
+   {
+    "atual": "reembolsada",
+    "novo": "recusada",
+    "resultado": false
+   },
+   {
+    "atual": "reembolsada",
+    "novo": "aprovada",
+    "resultado": false
+   },
+   {
+    "atual": "reembolsada",
+    "novo": "reembolsada",
+    "resultado": false
+   },
+   {
+    "atual": "reembolsada",
+    "novo": "cancelada",
+    "resultado": false
+   },
+   {
+    "atual": "reembolsada",
+    "novo": "chargeback",
+    "resultado": false
+   },
+   {
+    "atual": "cancelada",
+    "novo": "pendente",
+    "resultado": false
+   },
+   {
+    "atual": "cancelada",
+    "novo": "recusada",
+    "resultado": false
+   },
+   {
+    "atual": "cancelada",
+    "novo": "aprovada",
+    "resultado": false
+   },
+   {
+    "atual": "cancelada",
+    "novo": "reembolsada",
+    "resultado": false
+   },
+   {
+    "atual": "cancelada",
+    "novo": "cancelada",
+    "resultado": false
+   },
+   {
+    "atual": "cancelada",
+    "novo": "chargeback",
+    "resultado": false
+   },
+   {
+    "atual": "chargeback",
+    "novo": "pendente",
+    "resultado": false
+   },
+   {
+    "atual": "chargeback",
+    "novo": "recusada",
+    "resultado": false
+   },
+   {
+    "atual": "chargeback",
+    "novo": "aprovada",
+    "resultado": false
+   },
+   {
+    "atual": "chargeback",
+    "novo": "reembolsada",
+    "resultado": false
+   },
+   {
+    "atual": "chargeback",
+    "novo": "cancelada",
+    "resultado": false
+   },
+   {
+    "atual": "chargeback",
+    "novo": "chargeback",
+    "resultado": false
+   }
+  ],
+  "normalizar": {
+   "hotmart": {
+    "id_transacao": "HP16015479281022",
+    "status": "aprovada",
+    "produto": "Curso Lives que Vendem",
+    "valor_centavos": 19790,
+    "comprador_email": "Ana.Souza@example.com"
+   },
+   "kiwify": {
+    "id_transacao": "a1b2c3d4-0000-4000-8000-kiwify000001",
+    "status": "aprovada",
+    "produto": "Mentoria Afiliados Pro",
+    "valor_centavos": 49700,
+    "comprador_email": "joao@example.com"
+   }
+  },
+  "mascarar": {
+   "hotmart": {
+    "id": "3c1b0f2e-8d3c-4c55-a0f4-1b2c3d4e5f60",
+    "creation_date": 1791516000000,
+    "event": "PURCHASE_APPROVED",
+    "version": "2.0.0",
+    "data": {
+     "product": {
+      "id": 3528952,
+      "name": "***"
+     },
+     "buyer": {
+      "email": "hash:ad6ba282792f471b",
+      "name": "***",
+      "document": "***"
+     },
+     "purchase": {
+      "transaction": "HP16015479281022",
+      "status": "APPROVED",
+      "price": {
+       "value": 197.9,
+       "currency_value": "BRL"
+      },
+      "payment": {
+       "type": "CREDIT_CARD",
+       "installments_number": 3
+      }
+     }
+    }
+   },
+   "kiwify": {
+    "order_id": "a1b2c3d4-0000-4000-8000-kiwify000001",
+    "order_status": "paid",
+    "webhook_event_type": "order_approved",
+    "payment_method": "pix",
+    "Product": {
+     "product_id": "prod-77",
+     "product_name": "Mentoria Afiliados Pro"
+    },
+    "Customer": {
+     "email": "hash:11fcdb97c49b73df",
+     "full_name": "***",
+     "mobile": "+5598999990000"
+    },
+    "Commissions": {
+     "charge_amount": 49700,
+     "currency": "BRL"
+    }
+   }
+  },
+  "hash_email": {
+   "entrada": " Ana.Souza@Example.com ",
+   "saida": "ad6ba282792f471b92f4e4779d587dc3a1650bdb83970da6bf97551e2f233171"
+  },
+  "assinatura_kiwify": {
+   "corpo": "{\n  \"order_id\": \"a1b2c3d4-0000-4000-8000-kiwify000001\",\n  \"order_status\": \"paid\",\n  \"webhook_event_type\": \"order_approved\",\n  \"payment_method\": \"pix\",\n  \"Product\": {\"product_id\": \"prod-77\", \"product_name\": \"Mentoria Afiliados Pro\"},\n  \"Customer\": {\"email\": \"joao@example.com\", \"full_name\": \"João Lima\", \"mobile\": \"+5598999990000\"},\n  \"Commissions\": {\"charge_amount\": 49700, \"currency\": \"BRL\"}\n}\n",
+   "saida": "fae8c6e1703c26f54dfd213e92be8d5458573cbc"
+  }
+ }
+}

@@ -66,6 +66,15 @@ Documentação interativa em `/docs`.
 - O aviso bruto guardado para auditoria tem nome, documento e telefone trocados por `***` e o e-mail por hash.
 - A consulta por e-mail é `POST` com o e-mail no corpo: URL costuma ir parar em log.
 
+## Demonstração no navegador
+
+A pasta `web/` tem um simulador estático (sem servidor nem banco): manda avisos da Hotmart e da Kiwify, mostra a resposta da API, a tabela de vendas, a auditoria com dados mascarados e o canal do Discord. As regras puras (tradução de cada plataforma, ordem dos status, HMAC, máscara) são cópias em JavaScript conferidas contra o Python ao abrir a página. Os casos de conferência vêm do código de verdade:
+
+```bash
+uv run python scripts/gerar_dados_web.py   # regrava web/dados/demo.json
+python -m http.server -d web 8000          # abre em http://localhost:8000
+```
+
 ## Como rodar
 
 ```bash

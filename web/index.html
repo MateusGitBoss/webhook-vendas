@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>webhook-vendas · simulador</title>
+<meta name="description" content="Simulador do webhook-vendas: mande avisos de venda da Hotmart e da Kiwify e veja o que a API responde, grava e avisa.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💸</text></svg>">
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--txt:#1b1f24;--mut:#5b6573;--borda:#dde1e6;--acento:#1f6feb;--ok:#1a7f37;--alerta:#9a6700;--erro:#cf222e;--cinza:#eef1f4}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:var(--card);border-bottom:1px solid var(--borda)}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+header .wrap{padding-top:20px;padding-bottom:16px}
+h1{font-size:22px;margin:0 0 4px}
+h2{font-size:17px;margin:0 0 10px}
+h3{font-size:14px;margin:14px 0 6px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+p{margin:0 0 10px}
+a{color:var(--acento)}
+.sub{color:var(--mut);margin:0}
+.aviso{background:#fff8c5;border:1px solid #e6d27a;border-radius:8px;padding:8px 12px;margin-top:12px;font-size:14px}
+.nav{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:14px}
+main{padding:18px 0 40px}
+.grid{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:900px){.grid.duas{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--borda);border-radius:10px;padding:16px;min-width:0}
+label{display:block;font-size:13px;color:var(--mut);margin:8px 0 3px}
+select,input,textarea{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--borda);border-radius:6px;background:#fff;color:var(--txt)}
+textarea{font:12.5px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;min-height:210px;resize:vertical}
+.linha{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{font:inherit;cursor:pointer;border-radius:6px;border:1px solid var(--borda);background:#fff;padding:8px 12px;color:var(--txt)}
+button.prim{background:var(--acento);border-color:var(--acento);color:#fff;font-weight:600}
+button:hover{filter:brightness(.97)}
+.botoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.abas{display:flex;gap:6px}
+.abas button[aria-pressed=true]{background:var(--txt);color:#fff;border-color:var(--txt)}
+.cenarios{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.cenarios button{text-align:left;padding:10px 12px}
+.cenarios small{display:block;color:var(--mut);font-size:12.5px;margin-top:2px}
+.tabela{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--borda);vertical-align:top}
+th{color:var(--mut);font-weight:600;font-size:12.5px;white-space:nowrap}
+td.num,th.num{text-align:right;white-space:nowrap}
+.tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:600;background:var(--cinza);white-space:nowrap}
+.t-ok{background:#dafbe1;color:var(--ok)}.t-alerta{background:#fff8c5;color:var(--alerta)}.t-erro{background:#ffebe9;color:var(--erro)}.t-azul{background:#ddf4ff;color:#0969da}
+.resposta{font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;background:#0d1117;color:#e6edf3;border-radius:8px;padding:12px;white-space:pre-wrap;word-break:break-word;margin:0}
+.explica{border-left:3px solid var(--acento);padding:4px 0 4px 12px;margin-top:10px;font-size:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.kpi{background:var(--cinza);border-radius:8px;padding:10px}
+.kpi b{display:block;font-size:20px}
+.kpi span{font-size:12.5px;color:var(--mut)}
+.discord{background:#313338;color:#dbdee1;border-radius:8px;padding:10px;max-height:320px;overflow:auto}
+.msg{border-left:4px solid #546e7a;background:#2b2d31;border-radius:4px;padding:8px 10px;margin-bottom:8px;font-size:13.5px}
+.msg b{color:#fff}
+.msg small{color:#949ba4}
+.vazio{color:var(--mut);font-size:14px;font-style:italic}
+details{margin-top:4px}
+summary{cursor:pointer;color:var(--acento);font-size:13px}
+details pre{font-size:12px;background:var(--cinza);padding:8px;border-radius:6px;overflow-x:auto;margin:6px 0 0}
+.matriz td,.matriz th{text-align:center}
+.matriz th:first-child,.matriz td:first-child{text-align:left}
+.conferencia{font-size:14px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;background:var(--cinza);padding:1px 4px;border-radius:4px}
+footer{color:var(--mut);font-size:13px;padding:0 0 30px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>💸 webhook-vendas</h1>
+  <p class="sub">Recebe os avisos automáticos de venda da Hotmart e da Kiwify, confere se são verdadeiros, grava cada venda uma vez só e avisa a equipe no Discord.</p>
+  <div class="aviso"><b>Demonstração.</b> Tudo roda no seu navegador, com dados fictícios: não há servidor, banco nem Discord de verdade. As regras (tradução de cada plataforma, ordem dos status, assinatura HMAC, máscara de dados pessoais) são cópias do código Python, conferidas contra ele ao abrir a página (veja o fim).</div>
+  <nav class="nav"><a href="https://github.com/MateusGitBoss/webhook-vendas">Código no GitHub</a><a href="#simulador">Simulador</a><a href="#vendas">Vendas gravadas</a><a href="#regras">Regra dos status</a><a href="#conferencia">Conferência</a></nav>
+</div></header>
+
+<main class="wrap">
+<section class="card" style="margin-bottom:16px">
+  <h2>Cenários prontos</h2>
+  <p class="sub" style="margin-bottom:10px">Cada botão manda uma sequência de avisos e mostra o que aconteceu. Os resultados se acumulam nas tabelas abaixo.</p>
+  <div class="cenarios" id="cenarios"></div>
+</section>
+
+<div class="grid duas" id="simulador">
+  <section class="card">
+    <h2>Mandar um aviso</h2>
+    <div class="abas" role="group" aria-label="Plataforma">
+      <button type="button" data-plat="hotmart" aria-pressed="true">Hotmart</button>
+      <button type="button" data-plat="kiwify" aria-pressed="false">Kiwify</button>
+    </div>
+    <label for="evento">Evento</label>
+    <select id="evento"></select>
+    <div class="linha">
+      <div><label for="transacao">Transação</label><input id="transacao"></div>
+      <div><label for="valor">Valor (R$)</label><input id="valor" inputmode="decimal"></div>
+    </div>
+    <label for="auth">Autenticação</label>
+    <select id="auth">
+      <option value="ok">Token/assinatura corretos</option>
+      <option value="errado">Token/assinatura falsos (alguém tentando liberar curso de graça)</option>
+    </select>
+    <label for="corpo">Corpo do aviso (JSON, pode editar)</label>
+    <textarea id="corpo" spellcheck="false"></textarea>
+    <div class="botoes">
+      <button class="prim" type="button" id="enviar">Enviar aviso</button>
+      <button type="button" id="novaTransacao">Nova transação</button>
+      <button type="button" id="limpar">Zerar tudo</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Resposta da API</h2>
+    <pre class="resposta" id="resposta">Mande um aviso para ver a resposta.</pre>
+    <div class="explica" id="explicacao"></div>
+    <h3>Requisição</h3>
+    <pre class="resposta" id="requisicao" style="background:#f6f8fa;color:var(--txt);border:1px solid var(--borda)">—</pre>
+  </section>
+</div>
+
+<div class="grid duas" style="margin-top:16px" id="vendas">
+  <section class="card">
+    <h2>Resumo do dia</h2>
+    <div class="kpis" id="kpis"></div>
+    <h3>Por produto (aprovadas)</h3>
+    <div class="tabela"><table><thead><tr><th>Produto</th><th class="num">Qtd.</th><th class="num">Valor</th></tr></thead><tbody id="porProduto"></tbody></table></div>
+  </section>
+  <section class="card">
+    <h2>Canal do Discord</h2>
+    <p class="sub" style="margin-bottom:8px">Só aprovada, reembolso, cancelamento e chargeback viram mensagem. Aviso repetido não incomoda a equipe.</p>
+    <div class="discord" id="discord"></div>
+  </section>
+</div>
+
+<section class="card" style="margin-top:16px">
+  <h2>Tabela <code>vendas</code></h2>
+  <p class="sub" style="margin-bottom:8px">Uma linha por (plataforma, transação), garantido por <code>UNIQUE</code> no banco. O e-mail fica só como hash.</p>
+  <div class="tabela"><table><thead><tr><th>Plataforma</th><th>Transação</th><th>Produto</th><th class="num">Valor</th><th>Status</th><th>E-mail (hash)</th></tr></thead><tbody id="tabVendas"></tbody></table></div>
+</section>
+
+<section class="card" style="margin-top:16px">
+  <h2>Tabela <code>eventos_webhook</code> (auditoria)</h2>
+  <p class="sub" style="margin-bottom:8px">Todo aviso é gravado antes de qualquer decisão, inclusive os falsos e os quebrados, já sem nome, documento e telefone.</p>
+  <div class="tabela"><table><thead><tr><th>#</th><th>Plataforma</th><th>Assinatura</th><th>Resultado</th><th>Corpo guardado</th></tr></thead><tbody id="tabEventos"></tbody></table></div>
+</section>
+
+<section class="card" style="margin-top:16px" id="regras">
+  <h2>Regra dos status</h2>
+  <p>A internet não garante a ordem dos avisos: o reembolso pode chegar antes da aprovação. Por isso cada status tem um peso e só se troca para um peso maior. A única exceção é cartão recusado que depois é aprovado.</p>
+  <div class="tabela"><table class="matriz" id="matriz"></table></div>
+  <p class="sub" style="margin-top:8px">Linha: status gravado. Coluna: status que chegou. ✔ = muda, · = ignora.</p>
+</section>
+
+<section class="card conferencia" style="margin-top:16px" id="conferencia">
+  <h2>Conferência contra o Python</h2>
+  <p class="sub">O script <code>scripts/gerar_dados_web.py</code> roda o código Python de verdade e grava as respostas em <code>web/dados/demo.json</code>. Esta página refaz os mesmos cálculos em JavaScript e compara:</p>
+  <ul id="listaConferencia"><li>conferindo…</li></ul>
+</section>
+</main>
+<footer class="wrap">Projeto de portfólio de Mateus. Código: FastAPI, SQLAlchemy, PostgreSQL, Pydantic, pytest. Esta página é estática e não envia nada para lugar nenhum.</footer>
+
+<script>
+"use strict";
+// ---- Cópias das regras do Python (src/vendas) ----
+const PESO_STATUS = {pendente:0, recusada:1, aprovada:1, reembolsada:2, cancelada:2, chargeback:2};
+const CAMPOS_PESSOAIS = new Set(["name","full_name","first_name","last_name","document","cpf","phone"]);
+const EVENTOS_HOTMART = {PURCHASE_BILLET_PRINTED:"pendente",PURCHASE_DELAYED:"pendente",PURCHASE_APPROVED:"aprovada",PURCHASE_COMPLETE:"aprovada",PURCHASE_REFUNDED:"reembolsada",PURCHASE_CANCELED:"cancelada",PURCHASE_EXPIRED:"cancelada",PURCHASE_CHARGEBACK:"chargeback"};
+const STATUS_KIWIFY = {waiting_payment:"pendente",refused:"recusada",paid:"aprovada",approved:"aprovada",refunded:"reembolsada",canceled:"cancelada",chargedback:"chargeback"};
+const TITULOS = {aprovada:"Nova venda aprovada",reembolsada:"Venda reembolsada",chargeback:"Chargeback recebido",cancelada:"Venda cancelada",recusada:"Pagamento recusado",pendente:"Venda aguardando pagamento"};
+const CORES = {aprovada:"#2e7d32",reembolsada:"#f9a825",chargeback:"#c62828"};
+const STATUS_AVISADOS = new Set(["aprovada","reembolsada","chargeback","cancelada"]);
+
+class ErroPayload extends Error {}
+class EventoIgnorado extends Error {}
+
+function podeMudar(atual, novo){
+  if (atual === novo) return false;
+  if (atual === "recusada" && novo === "aprovada") return true;
+  return PESO_STATUS[novo] > PESO_STATUS[atual];
+}
+function pegar(dados, ...caminho){
+  let atual = dados;
+  for (const chave of caminho){
+    if (atual === null || typeof atual !== "object" || Array.isArray(atual) || !(chave in atual))
+      throw new ErroPayload(`campo obrigatório ausente: ${caminho.join(".")}`);
+    atual = atual[chave];
+  }
+  return atual;
+}
+function reaisParaCentavos(valor){
+  // Python: Decimal(str(valor)) * 100, arredondado. Aqui pelo texto, sem passar por float.
+  const m = String(valor).trim().match(/^(-?)(\d+)(?:\.(\d+))?$/);
+  if (!m || typeof valor === "boolean") throw new ErroPayload(`valor inválido: ${JSON.stringify(valor)}`);
+  const frac = (m[3] || "").padEnd(3, "0");
+  let c = BigInt(m[2]) * 100n + BigInt(frac.slice(0,2));
+  if (Number(frac[2]) >= 5) c += 1n;
+  return Number(m[1] ? -c : c);
+}
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+function validarVenda(v){
+  const erros = [];
+  if (typeof v.id_transacao !== "string" || !v.id_transacao || v.id_transacao.length > 100) erros.push("id_transacao");
+  if (typeof v.produto !== "string" || !v.produto || v.produto.length > 200) erros.push("produto");
+  if (!Number.isInteger(v.valor_centavos) || v.valor_centavos < 0) erros.push("valor_centavos");
+  if (typeof v.comprador_email !== "string" || !EMAIL_RE.test(v.comprador_email)) erros.push("comprador_email");
+  if (erros.length) throw new ErroPayload(`campos inválidos: ${erros.join(", ")}`);
+  // EmailStr do Pydantic deixa o domínio em minúsculas: Ana@Example.com -> Ana@example.com
+  const arroba = v.comprador_email.lastIndexOf("@");
+  v.comprador_email = v.comprador_email.slice(0, arroba) + v.comprador_email.slice(arroba).toLowerCase();
+  return v;
+}
+const ADAPTADORES = {
+  hotmart: {
+    normalizar(p){
+      const evento = pegar(p, "event");
+      if (!(evento in EVENTOS_HOTMART)) throw new EventoIgnorado(`evento ${evento} não é de compra`);
+      const preco = pegar(p, "data", "purchase", "price");
+      const moeda = preco && typeof preco === "object" && "currency_value" in preco ? preco.currency_value : "BRL";
+      if (moeda !== "BRL") throw new ErroPayload(`moeda não suportada: ${moeda}`);
+      return validarVenda({
+        id_transacao: pegar(p, "data", "purchase", "transaction"),
+        status: EVENTOS_HOTMART[evento],
+        produto: pegar(p, "data", "product", "name"),
+        valor_centavos: reaisParaCentavos(pegar(p, "data", "purchase", "price", "value")),
+        comprador_email: pegar(p, "data", "buyer", "email"),
+      });
+    }
+  },
+  kiwify: {
+    normalizar(p){
+      const status = pegar(p, "order_status");
+      if (!(status in STATUS_KIWIFY)) throw new EventoIgnorado(`status ${status} não é de compra`);
+      const valor = pegar(p, "Commissions", "charge_amount");
+      const centavos = typeof valor === "number" ? Math.trunc(valor) : (/^\s*-?\d+\s*$/.test(String(valor)) ? parseInt(valor, 10) : NaN);
+      if (Number.isNaN(centavos) || valor === null || typeof valor === "boolean") throw new ErroPayload(`valor inválido: ${JSON.stringify(valor)}`);
+      return validarVenda({
+        id_transacao: pegar(p, "order_id"),
+        status: STATUS_KIWIFY[status],
+        produto: pegar(p, "Product", "product_name"),
+        valor_centavos: centavos,
+        comprador_email: pegar(p, "Customer", "email"),
+      });
+    }
+  }
+};
+
+// HMAC no navegador (Web Crypto). Mesmo resultado do hmac.new(...).hexdigest() do Python.
+const enc = new TextEncoder();
+async function hmacHex(segredo, mensagem, algoritmo){
+  const chave = await crypto.subtle.importKey("raw", enc.encode(segredo), {name:"HMAC", hash:algoritmo}, false, ["sign"]);
+  const assinatura = await crypto.subtle.sign("HMAC", chave, typeof mensagem === "string" ? enc.encode(mensagem) : mensagem);
+  return [...new Uint8Array(assinatura)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+const hashEmail = (email, segredo) => hmacHex(segredo, email.trim().toLowerCase(), "SHA-256");
+async function mascarar(payload, segredo){
+  if (Array.isArray(payload)) return Promise.all(payload.map(v => mascarar(v, segredo)));
+  if (payload && typeof payload === "object"){
+    const limpo = {};
+    for (const [chave, valor] of Object.entries(payload)){
+      if (CAMPOS_PESSOAIS.has(chave.toLowerCase())) limpo[chave] = "***";
+      else if (chave.toLowerCase() === "email" && typeof valor === "string") limpo[chave] = "hash:" + (await hashEmail(valor, segredo)).slice(0, 16);
+      else limpo[chave] = await mascarar(valor, segredo);
+    }
+    return limpo;
+  }
+  return payload;
+}
+function reais(c){
+  return "R$ " + (c/100).toLocaleString("pt-BR", {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+// ---- "Servidor" em memória: mesma ordem de decisões de receber_webhook (src/vendas/api.py) ----
+let DEMO = null;
+const HOTTOK = "hottok-da-demonstracao";
+const estado = {vendas: [], eventos: [], discord: []};
+
+async function receberWebhook(plataforma, corpoTexto, credencial){
+  const adaptador = ADAPTADORES[plataforma];
+  let payload = null;
+  try { payload = JSON.parse(corpoTexto); } catch { payload = null; }
+  let valida;
+  if (plataforma === "hotmart") valida = credencial.hottok === HOTTOK;
+  else valida = credencial.signature === await hmacHex(DEMO.token_kiwify, corpoTexto, "SHA-1");
+
+  const evento = {
+    id: estado.eventos.length + 1, plataforma, assinatura_valida: valida,
+    payload: payload && typeof payload === "object" && !Array.isArray(payload)
+      ? await mascarar(payload, DEMO.segredo_hash)
+      : {_corpo_invalido: corpoTexto.slice(0, 2000)},
+    processado: false, erro: null,
+  };
+  estado.eventos.push(evento);
+  const falhar = (codigo, motivo) => { evento.erro = motivo; return {codigo, corpo:{detail: motivo}}; };
+
+  if (!valida) return falhar(401, "assinatura inválida");
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return falhar(400, "corpo não é um JSON válido");
+  let venda;
+  try { venda = adaptador.normalizar(payload); }
+  catch (e){
+    if (e instanceof EventoIgnorado){ evento.processado = true; evento.erro = `ignorado: ${e.message}`; return {codigo:200, corpo:{recebido:true, venda_id:null, mudanca:"sem_mudanca"}, ignorado:e.message}; }
+    if (e instanceof ErroPayload) return falhar(422, `payload inválido: ${e.message}`);
+    throw e;
+  }
+  // registrar_venda: INSERT ... ON CONFLICT DO NOTHING, depois SELECT ... FOR UPDATE
+  let existente = estado.vendas.find(v => v.plataforma === plataforma && v.id_transacao === venda.id_transacao);
+  let mudanca, anterior = null;
+  if (!existente){
+    existente = {id: estado.vendas.length + 1, plataforma, ...venda, comprador_email_hash: await hashEmail(venda.comprador_email, DEMO.segredo_hash)};
+    delete existente.comprador_email;
+    estado.vendas.push(existente);
+    mudanca = "nova";
+  } else if (podeMudar(existente.status, venda.status)){
+    anterior = existente.status; existente.status = venda.status; mudanca = "status_atualizado";
+  } else {
+    anterior = existente.status; mudanca = "sem_mudanca";
+  }
+  evento.processado = true;
+  if (mudanca !== "sem_mudanca" && STATUS_AVISADOS.has(existente.status))
+    estado.discord.push({status: existente.status, produto: existente.produto, valor: existente.valor_centavos, plataforma});
+  return {codigo:200, corpo:{recebido:true, venda_id:existente.id, mudanca}, venda:existente, chegou:venda.status, anterior};
+}
+
+// ---- Montagem dos avisos ----
+const OPCOES = {
+  hotmart: [...Object.keys(EVENTOS_HOTMART), "CLUB_FIRST_ACCESS"],
+  kiwify: [...Object.keys(STATUS_KIWIFY), "abandoned_cart"],
+};
+let plataforma = "hotmart";
+const $ = id => document.getElementById(id);
+
+function montarCorpo(plat, codigo, transacao, valorReais){
+  const base = structuredClone(DEMO.exemplos[plat]);
+  if (plat === "hotmart"){
+    base.event = codigo;
+    base.data.purchase.transaction = transacao;
+    base.data.purchase.status = codigo.replace("PURCHASE_", "");
+    base.data.purchase.price.value = Number(valorReais);
+  } else {
+    base.order_status = codigo;
+    base.order_id = transacao;
+    base.Commissions.charge_amount = Math.round(Number(valorReais) * 100);
+  }
+  return JSON.stringify(base, null, 2);
+}
+function idNovo(plat){
+  const n = Math.floor(Math.random() * 1e8).toString().padStart(8, "0");
+  return plat === "hotmart" ? "HP1601" + n : `demo-${n}-kiwify`;
+}
+function preencher(){
+  $("corpo").value = montarCorpo(plataforma, $("evento").value, $("transacao").value, $("valor").value.replace(",", "."));
+}
+function trocarPlataforma(plat){
+  plataforma = plat;
+  document.querySelectorAll("[data-plat]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.plat === plat)));
+  $("evento").innerHTML = OPCOES[plat].map(c => {
+    const st = plat === "hotmart" ? EVENTOS_HOTMART[c] : STATUS_KIWIFY[c];
+    return `<option value="${c}">${c} → ${st || "não é compra"}</option>`;
+  }).join("");
+  $("evento").value = plat === "hotmart" ? "PURCHASE_APPROVED" : "paid";
+  const ex = DEMO.exemplos[plat];
+  $("transacao").value = plat === "hotmart" ? ex.data.purchase.transaction : ex.order_id;
+  $("valor").value = plat === "hotmart" ? String(ex.data.purchase.price.value).replace(".", ",") : (ex.Commissions.charge_amount/100).toFixed(2).replace(".", ",");
+  preencher();
+}
+
+async function enviar(plat, corpoTexto, autenticar){
+  let credencial, requisicao;
+  if (plat === "hotmart"){
+    const hottok = autenticar ? HOTTOK : "chute-qualquer";
+    credencial = {hottok};
+    requisicao = `POST /webhooks/hotmart\nX-HOTMART-HOTTOK: ${hottok}\nContent-Type: application/json`;
+  } else {
+    const signature = autenticar ? await hmacHex(DEMO.token_kiwify, corpoTexto, "SHA-1") : "0".repeat(40);
+    credencial = {signature};
+    requisicao = `POST /webhooks/kiwify?signature=${signature}\nContent-Type: application/json\n\n(signature = HMAC-SHA1 do corpo com o token da conta;\n o token nunca viaja, só a assinatura)`;
+  }
+  const r = await receberWebhook(plat, corpoTexto, credencial);
+  r.requisicao = requisicao;
+  return r;
+}
+function explicar(r){
+  const c = r.corpo;
+  if (r.codigo === 401) return "<b>401.</b> O token ou a assinatura não batem. O aviso foi gravado na auditoria com <code>assinatura_valida = false</code> e nada mais aconteceu: ninguém libera curso mandando aviso falso.";
+  if (r.codigo === 400) return "<b>400.</b> O corpo não é JSON. Fica gravado na auditoria para alguém investigar.";
+  if (r.codigo === 422) return `<b>422.</b> Faltou campo ou veio valor estranho (${esc(c.detail.replace("payload inválido: ", ""))}). A resposta diz o motivo para a plataforma.`;
+  if (r.ignorado) return `<b>200, ignorado.</b> ${esc(r.ignorado)}. Responde 200 mesmo assim: com erro, a plataforma ficaria reenviando para sempre.`;
+  if (c.mudanca === "nova") return `<b>Venda nova</b> gravada como <span class="tag">${r.venda.status}</span>.` + (STATUS_AVISADOS.has(r.venda.status) ? " A equipe recebeu mensagem no Discord." : " Status sem aviso no Discord.");
+  if (c.mudanca === "status_atualizado") return `<b>Status atualizado:</b> ${r.anterior} → <span class="tag">${r.venda.status}</span>.` + (STATUS_AVISADOS.has(r.venda.status) ? " Discord avisado." : "");
+  if (r.anterior === r.chegou) return "<b>Aviso repetido.</b> A venda já estava assim. Responde 200, não duplica a linha e não manda outra mensagem no Discord.";
+  return `<b>Ignorado:</b> chegou <span class="tag">${r.chegou}</span>, mas a venda já está <span class="tag">${r.anterior}</span>. Status final não volta atrás (aviso atrasado).`;
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch])); }
+function mostrar(r){
+  $("resposta").textContent = `HTTP ${r.codigo}\n` + JSON.stringify(r.corpo, null, 2);
+  $("requisicao").textContent = r.requisicao;
+  $("explicacao").innerHTML = explicar(r);
+  renderizar();
+}
+const CLASSE_STATUS = {aprovada:"t-ok", pendente:"t-azul", recusada:"t-alerta", reembolsada:"t-alerta", cancelada:"", chargeback:"t-erro"};
+function renderizar(){
+  const v = estado.vendas;
+  $("tabVendas").innerHTML = v.length ? v.map(x => `<tr><td>${x.plataforma}</td><td><code>${esc(x.id_transacao)}</code></td><td>${esc(x.produto)}</td><td class="num">${reais(x.valor_centavos)}</td><td><span class="tag ${CLASSE_STATUS[x.status]}">${x.status}</span></td><td><code>${x.comprador_email_hash.slice(0,12)}…</code></td></tr>`).join("")
+    : `<tr><td colspan="6" class="vazio">Nenhuma venda ainda.</td></tr>`;
+  $("tabEventos").innerHTML = estado.eventos.length ? estado.eventos.slice().reverse().map(e => {
+    const res = e.erro ? (e.erro.startsWith("ignorado") ? `<span class="tag">${esc(e.erro)}</span>` : `<span class="tag t-erro">${esc(e.erro)}</span>`) : `<span class="tag t-ok">processado</span>`;
+    return `<tr><td>${e.id}</td><td>${e.plataforma}</td><td>${e.assinatura_valida ? '<span class="tag t-ok">válida</span>' : '<span class="tag t-erro">inválida</span>'}</td><td>${res}</td><td><details><summary>ver JSON</summary><pre>${esc(JSON.stringify(e.payload, null, 1))}</pre></details></td></tr>`;
+  }).join("") : `<tr><td colspan="5" class="vazio">Nenhum aviso recebido.</td></tr>`;
+  const aprov = v.filter(x => x.status === "aprovada");
+  const fat = aprov.reduce((s, x) => s + x.valor_centavos, 0);
+  const kpis = [["Aprovadas", aprov.length], ["Faturamento", reais(fat)], ["Ticket médio", reais(aprov.length ? Math.floor(fat/aprov.length) : 0)], ["Reembolsos", v.filter(x => x.status === "reembolsada").length], ["Chargebacks", v.filter(x => x.status === "chargeback").length]];
+  $("kpis").innerHTML = kpis.map(([r, n]) => `<div class="kpi"><b>${n}</b><span>${r}</span></div>`).join("");
+  const porProduto = {};
+  aprov.forEach(x => { const p = porProduto[x.produto] ||= {q:0, c:0}; p.q++; p.c += x.valor_centavos; });
+  const linhas = Object.entries(porProduto).sort((a, b) => b[1].c - a[1].c);
+  $("porProduto").innerHTML = linhas.length ? linhas.map(([p, x]) => `<tr><td>${esc(p)}</td><td class="num">${x.q}</td><td class="num">${reais(x.c)}</td></tr>`).join("") : `<tr><td colspan="3" class="vazio">Sem vendas aprovadas.</td></tr>`;
+  $("discord").innerHTML = estado.discord.length ? estado.discord.slice().reverse().map(m => `<div class="msg" style="border-left-color:${CORES[m.status] || "#546e7a"}"><b>${TITULOS[m.status]}</b><br>${esc(m.produto)}<br>${reais(m.valor)}<br><small>${m.plataforma}</small></div>`).join("") : `<p class="vazio" style="color:#949ba4">Nenhuma mensagem.</p>`;
+}
+
+// ---- Cenários prontos ----
+const CENARIOS = [
+  {titulo:"Venda aprovada", desc:"Hotmart, compra de R$ 197,90.", passos:[["hotmart","PURCHASE_APPROVED",197.9]]},
+  {titulo:"Aviso repetido", desc:"A Kiwify reenvia o mesmo pedido pago 3 vezes.", passos:[["kiwify","paid",497],["kiwify","paid",497],["kiwify","paid",497]]},
+  {titulo:"Reembolso chega antes", desc:"Reembolso e depois a aprovação atrasada.", passos:[["hotmart","PURCHASE_REFUNDED",97],["hotmart","PURCHASE_APPROVED",97]]},
+  {titulo:"Recusado, depois aprovado", desc:"Cartão recusado, cliente tenta de novo.", passos:[["kiwify","refused",297],["kiwify","approved",297]]},
+  {titulo:"Boleto → pago → chargeback", desc:"Ciclo completo de uma venda.", passos:[["hotmart","PURCHASE_BILLET_PRINTED",47],["hotmart","PURCHASE_APPROVED",47],["hotmart","PURCHASE_CHARGEBACK",47]]},
+  {titulo:"Aviso falso", desc:"Alguém sem o token tenta liberar um curso.", passos:[["hotmart","PURCHASE_APPROVED",997,false]]},
+  {titulo:"Evento que não é compra", desc:"Primeiro acesso ao curso: 200 e ignora.", passos:[["hotmart","CLUB_FIRST_ACCESS",0]]},
+  {titulo:"JSON quebrado", desc:"Corpo cortado no meio.", passos:[["kiwify","quebrado",0]]},
+];
+async function rodarCenario(c){
+  let r, transacao = null;
+  for (const [plat, codigo, valor, autenticar = true] of c.passos){
+    transacao ||= idNovo(plat);
+    const corpo = codigo === "quebrado" ? '{"order_id": "abc", "order_status": "pa' : montarCorpo(plat, codigo, transacao, valor);
+    r = await enviar(plat, corpo, autenticar);
+    if (c.passos.length > 1) r.requisicao = `${c.passos.length} avisos enviados em sequência. Último:\n\n` + r.requisicao;
+  }
+  mostrar(r);
+  $("simulador").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+// ---- Conferência contra o Python ----
+async function conferir(){
+  const itens = [];
+  const add = (ok, texto) => itens.push(`<li>${ok ? "✅" : "❌"} ${texto}</li>`);
+  const conf = DEMO.conferencia;
+  const difPM = conf.pode_mudar.filter(c => podeMudar(c.atual, c.novo) !== c.resultado);
+  add(!difPM.length, `regra dos status: ${conf.pode_mudar.length - difPM.length} de ${conf.pode_mudar.length} combinações iguais`);
+  for (const plat of ["hotmart", "kiwify"]){
+    const js = ADAPTADORES[plat].normalizar(DEMO.exemplos[plat]);
+    add(JSON.stringify(js) === JSON.stringify(conf.normalizar[plat]), `tradução do aviso da ${plat} igual à do Python`);
+    const m = await mascarar(DEMO.exemplos[plat], DEMO.segredo_hash);
+    add(JSON.stringify(m) === JSON.stringify(conf.mascarar[plat]), `máscara de dados pessoais (${plat}) igual`);
+  }
+  add(await hashEmail(conf.hash_email.entrada, DEMO.segredo_hash) === conf.hash_email.saida, "hash do e-mail (HMAC-SHA256, ignora maiúsculas e espaços) igual");
+  add(await hmacHex(DEMO.token_kiwify, conf.assinatura_kiwify.corpo, "SHA-1") === conf.assinatura_kiwify.saida, "assinatura HMAC-SHA1 da Kiwify igual");
+  $("listaConferencia").innerHTML = itens.join("");
+}
+
+function matriz(){
+  const st = Object.keys(PESO_STATUS);
+  $("matriz").innerHTML = `<thead><tr><th>gravado ↓ / chegou →</th>${st.map(s => `<th>${s}</th>`).join("")}</tr></thead><tbody>` +
+    st.map(a => `<tr><th>${a} <small>(peso ${PESO_STATUS[a]})</small></th>${st.map(n => `<td>${podeMudar(a, n) ? '<span class="tag t-ok">✔</span>' : "·"}</td>`).join("")}</tr>`).join("") + "</tbody>";
+}
+
+async function iniciar(){
+  DEMO = await (await fetch("dados/demo.json")).json();
+  $("cenarios").innerHTML = CENARIOS.map((c, i) => `<button type="button" data-cen="${i}"><b>${c.titulo}</b><small>${c.desc}</small></button>`).join("");
+  $("cenarios").addEventListener("click", e => { const b = e.target.closest("[data-cen]"); if (b) rodarCenario(CENARIOS[b.dataset.cen]); });
+  document.querySelectorAll("[data-plat]").forEach(b => b.addEventListener("click", () => trocarPlataforma(b.dataset.plat)));
+  ["evento", "transacao", "valor"].forEach(id => $(id).addEventListener("change", preencher));
+  $("novaTransacao").addEventListener("click", () => { $("transacao").value = idNovo(plataforma); preencher(); });
+  $("enviar").addEventListener("click", async () => mostrar(await enviar(plataforma, $("corpo").value, $("auth").value === "ok")));
+  $("limpar").addEventListener("click", () => { estado.vendas = []; estado.eventos = []; estado.discord = []; $("resposta").textContent = "Mande um aviso para ver a resposta."; $("explicacao").innerHTML = ""; $("requisicao").textContent = "—"; renderizar(); });
+  trocarPlataforma("hotmart");
+  matriz();
+  renderizar();
+  conferir().catch(e => { $("listaConferencia").innerHTML = `<li>❌ erro na conferência: ${esc(e.message)}</li>`; });
+}
+iniciar();
+</script>
+</body>
+</html>
