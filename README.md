@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/MateusGitBoss/webhook-vendas/actions/workflows/ci.yml/badge.svg)](https://github.com/MateusGitBoss/webhook-vendas/actions/workflows/ci.yml)
 
+**Demonstração online:** https://webhook-vendas-one.vercel.app
+
 API que recebe os avisos automáticos de venda (webhooks) da Hotmart e da Kiwify, confere se são verdadeiros, grava cada venda uma única vez e avisa a equipe no Discord.
 
 **Explicação para quem não é da área:** toda vez que alguém compra um curso, a plataforma de pagamento manda um aviso automático para o nosso sistema. Este projeto recebe esse aviso, confere que ele veio mesmo da plataforma (e não de alguém tentando liberar um curso de graça), registra a venda uma vez só, mesmo que o aviso chegue repetido, e manda uma mensagem no Discord da equipe. Se o cliente pedir reembolso, a venda é atualizada e a equipe também é avisada.
@@ -121,7 +123,7 @@ uv run alembic check   # garante que a migração bate com os modelos
 
 ## Como este projeto foi construído
 
-Construído com o Claude Code como ferramenta de desenvolvimento, com cada mudança entrando por pull request revisado. O roteiro de estudo está em [`docs/ENTREVISTA.md`](docs/ENTREVISTA.md).
+Construído com o Claude Code como ferramenta de desenvolvimento, com cada mudança entrando por pull request revisado.
 
 ## Licença
 
